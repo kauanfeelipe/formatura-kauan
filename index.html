@@ -26,10 +26,11 @@
                     <span class="title-line">Meu Sonho</span>
                     <span class="title-line gradient-text">Está Quase Realizado!</span>
                 </h1>
+                
                 <p class="hero-subtitle">
-                    Após anos de dedicação e estudo, chegou a hora da minha formatura! 
-                    Sua ajuda é fundamental para celebrar esta conquista especial.
+                    Criei esta página como uma forma moderna e transparente para que amigos e familiares possam contribuir via PIX com os custos da minha cerimônia e festa da minha formatura. É um convite para você fazer parte desta grande conquista!
                 </p>
+
             </div>
 
             <div class="qr-code-actions-wrapper"> 
@@ -40,9 +41,9 @@
                     <div class="qr-instruction">
                         <p id="qrInstructionText">
                             <span class="qr-icon">📱</span>
-                            </p>
+                        </p>
                         <p id="qrInstructionSubtext" class="qr-instruction-subtext">
-                            </p>
+                        </p>
                     </div>
 
                 </div>
@@ -56,6 +57,19 @@
                         <span class="btn-icon">🔗</span>
                         Abrir QR Code
                     </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="progress-section">
+            <div class="progress-container">
+                <h2 class="progress-title">Progresso da Meta (<span id="porcentagemMeta">0%</span>)</h2>
+                <div class="progress-bar-background">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+                <div class="progress-labels">
+                    <span id="valorArrecadado">R$ 0,00</span>
+                    <span id="metaTotal">R$ 5.000,00</span>
                 </div>
             </div>
         </section>
@@ -95,7 +109,7 @@
                 <div class="info-card message-card">
                     <h2 class="card-title">💬 Minha Mensagem</h2>
                     <p class="personal-message">
-                        "Cada contribuição me aproxima do meu sonho de formatura. Gratidão a todos que estão me apoiando neste momento tão especial !"
+                        "Cada contribuição me aproxima do meu sonho de formatura. Gratidão a todos que estão me apoiando neste momento tão especial!"
                     </p>
                     <div class="message-author">
                         <div class="author-avatar">👨‍🎓</div>
@@ -107,20 +121,30 @@
                 </div>
             </div>
         </section>
+
+        <section class="supporters-section">
+            <h2 class="section-title">Agradecimento aos Colaboradores ✨</h2>
+            <div class="cube-container">
+                <div class="rubiks-cube" id="rubiks-cube">
+                    </div>
+            </div>
+        </section>
+
         <section class="cta-section">
             <h2 class="cta-title">Faça Parte da Minha História!</h2>
-            <p class="cta-subtitle">Sua contribuição, por menor que seja, tem um significado imenso para mim. Tudo foi criado com muito carinho para celebrar essa conquista! ✨</p>
+            <p class="cta-subtitle">Sua contribuição, por menor que seja, tem um significado imenso para mim.</p>
             <button class="cta-button" id="ctaButton">
                 Contribuir Agora <span class="button-icon">💝</span>
             </button>
         </section>
     </main>
+
     <footer class="footer">
         <div class="footer-content">
             <p>&copy; 2025 Kauan Felipe. Todos os direitos reservados.</p>
-            <p><a class="portfolio-link" href="https://kauanfeelipe.github.io/web-portifolio/" target="_blank">Portfólio 📚</a></p>
-        </div>
+<p><a class="portfolio-link" href="https://kauanfeelipe.github.io/web-portifolio/" target="_blank">Portfólio 📚</a></p>        </div>
     </footer>
+
     <div id="confetti-container"></div>
     <script src="script.js"></script>
 </body>

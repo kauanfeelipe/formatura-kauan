@@ -59,6 +59,15 @@ body {
     100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }
 
+@keyframes rotate-cube {
+    from {
+        transform: rotateX(0deg) rotateY(0deg);
+    }
+    to {
+        transform: rotateX(360deg) rotateY(360deg);
+    }
+}
+
 /* ------------------- */
 /* Estilos Gerais      */
 /* ------------------- */
@@ -129,7 +138,7 @@ body {
 .hero-subtitle {
     font-size: 1.1rem;
     color: var(--text-medium);
-    max-width: 500px;
+    max-width: 650px;
     margin: 0 auto 2.5rem auto;
 }
 
@@ -183,6 +192,7 @@ body {
     align-items: center;
     gap: 0.4em;
     flex-wrap: wrap;
+    min-height: 2.6em;
 }
 
 .qr-instruction p {
@@ -231,6 +241,61 @@ body {
     transform: translateY(-3px);
     box-shadow: var(--shadow-purple);
 }
+
+/* ------------------- */
+/* Seção de Progresso da Meta */
+/* ------------------- */
+.progress-section {
+    padding: 2rem 0;
+}
+
+.progress-container {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 1.5rem 2rem;
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.progress-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.progress-bar-background {
+    width: 100%;
+    height: 12px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50px;
+    border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.progress-bar-fill {
+    width: 0%; 
+    height: 100%;
+    background: var(--primary-gradient);
+    border-radius: 50px;
+    transition: width 0.8s ease-in-out;
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: var(--text-medium);
+    margin-top: 0.5rem;
+    padding: 0 5px; 
+}
+
+.progress-labels span {
+    font-weight: 600;
+    color: var(--text-light);
+}
+
 
 /* ------------------- */
 /* Seção de Informações (Cards) */
@@ -357,6 +422,73 @@ body {
 }
 
 /* ------------------- */
+/* Seção de Agradecimentos (CUBO MÁGICO) */
+/* ------------------- */
+.supporters-section {
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.section-title {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+    color: var(--text-light);
+}
+
+.cube-container {
+    width: 200px;
+    height: 200px;
+    perspective: 1200px;
+    margin: 0 auto;
+}
+
+.rubiks-cube {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: rotate-cube 15s infinite linear;
+}
+
+.rubiks-cube .face {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+}
+
+.rubiks-cube .face.front  { transform: translateZ(100px); }
+.rubiks-cube .face.back   { transform: rotateY(180deg) translateZ(100px); }
+.rubiks-cube .face.left   { transform: rotateY(-90deg) translateZ(100px); }
+.rubiks-cube .face.right  { transform: rotateY(90deg) translateZ(100px); }
+.rubiks-cube .face.top    { transform: rotateX(90deg) translateZ(100px); }
+.rubiks-cube .face.bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+.rubiks-cube .cube {
+    width: calc(100% / 3);
+    height: calc(100% / 3);
+    box-sizing: border-box;
+    border: 2px solid var(--bg-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4px;
+}
+
+.rubiks-cube .cube-name {
+    color: var(--bg-dark);
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.1;
+    word-break: break-word;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+/* ------------------- */
 /* Seção CTA           */
 /* ------------------- */
 .cta-section {
@@ -469,7 +601,6 @@ body {
     text-decoration: underline; /* aparece sublinhado no hover */
 }
 
-
 /* ------------------- */
 /* Responsividade      */
 /* ------------------- */
@@ -502,9 +633,21 @@ body {
         grid-template-columns: 1fr;
     }
     
+    /* AJUSTE AQUI: Aproximação da seção de Informações */
     .info-section {
         padding-top: 0;
         margin-top: -1.5rem;
+    }
+    
+    /* AJUSTE AQUI: Aproximação da seção de Progresso */
+    .progress-section {
+        padding-top: 1rem;
+        margin-top: -2.5rem; /* Puxa ainda mais para cima */
+    }
+
+    /* AJUSTE AQUI: Aproximação da seção de Agradecimentos */
+    .supporters-section {
+        padding-top: 1.5rem;
     }
 
     .values-container {
