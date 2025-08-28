@@ -3,7 +3,10 @@
  */
 document.addEventListener('DOMContentLoaded', function() {
     // --- DADOS DA CAMPANHA (VOCÊ ATUALIZA AQUI) ---
-    const metaFinanceira = 5000;
+
+    const metaFinanceira = 5000; // Sua meta final em Reais.
+
+    // Lista de doadores. Adicione novos doadores aqui!
     const doadores = [
         { nome: 'Adrian Souza', valor: 5 },
         { nome: 'Wilian Machado', valor: 5 },
@@ -65,9 +68,16 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
         }).join('');
         
-        // LÓGICA SIMPLIFICADA: Sempre duplicar e sempre animar.
-        guestbookList.innerHTML = recadosHtml + recadosHtml;
-        guestbookList.style.animation = 'scroll 60s linear infinite';
+        const minRecadosParaRolar = 4;
+        if (recadosExibidos.length < minRecadosParaRolar) {
+            guestbookList.innerHTML = recadosHtml;
+            guestbookList.style.animation = 'none';
+            if (guestbookList.parentElement) guestbookList.parentElement.style.justifyContent = 'center';
+        } else {
+            guestbookList.innerHTML = recadosHtml + recadosHtml;
+            guestbookList.style.animation = 'scroll 60s linear infinite';
+            if (guestbookList.parentElement) guestbookList.parentElement.style.justifyContent = 'flex-start';
+        }
     }
 
     /**
@@ -103,8 +113,11 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function popularCuboMagico() {
         if (!rubiksCube) return;
+        rubiksCube.innerHTML = '';
+
         const faces = ['front', 'back', 'left', 'right', 'top', 'bottom'];
-        const colors = ['var(--purple-light)', 'var(--purple-dark)', 'var(--gold)', '#FFFFFF', '#61dafb', '#ff3d00'];
+        const colors = ['#FFFFFF', '#ffeb3b', '#ff3d00', '#4caf50', '#2196f3', '#ff9800'];
+
         let donorIndex = 0;
         faces.forEach(faceName => {
             const faceDiv = document.createElement('div');
@@ -192,7 +205,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     modal.style.display = 'none';
                     this.reset();
                     
-                    // Atualização Instantânea
                     recadosExibidos.unshift({ nome, mensagem });
                     renderizarRecados();
                     
