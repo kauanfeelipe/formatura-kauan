@@ -3,17 +3,12 @@
  */
 document.addEventListener('DOMContentLoaded', function() {
     // --- DADOS DA CAMPANHA (VOCÊ ATUALIZA AQUI) ---
-
-    const metaFinanceira = 5000; // Sua meta final em Reais.
-
-    // Lista de doadores. Adicione novos doadores aqui!
+    const metaFinanceira = 5000;
     const doadores = [
         { nome: 'Adrian Souza', valor: 5 },
         { nome: 'Wilian Machado', valor: 5 },
         { nome: 'Fernanda Bonato', valor: 10 },
     ];
-    
-    // ⚠️ ATENÇÃO: COLE AQUI O URL DA SUA PLANILHA PUBLICADA COMO CSV
     const googleSheetCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTko3TfuHCK_RV1R5Lb46In2hDyg6v09zUlg1Jv6a7-shWj4Ggno95vGMgo7CPyxfKdF8Fc6nPJ7yqG/pub?gid=0&single=true&output=csv';
 
     // --- 1. SELEÇÃO DOS ELEMENTOS ---
@@ -30,28 +25,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const porcentagemMetaEl = document.getElementById('porcentagemMeta');
     const rubiksCube = document.getElementById('rubiks-cube');
     const guestbookList = document.getElementById('guestbook-list');
+    const guestbookCarousel = document.querySelector('.guestbook-carousel');
     const modal = document.getElementById('guestbook-modal');
     const openModalBtn = document.getElementById('openModalBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const guestbookForm = document.getElementById('guestbook-form');
     const submitGuestbookBtn = document.getElementById('submit-guestbook');
 
-    // Variável para guardar os recados em memória
     let recadosExibidos = [];
 
     // --- 2. FUNÇÕES DE LÓGICA E ATUALIZAÇÃO ---
-
-    /**
-     * Pega a lista de recados e a renderiza no carrossel.
-     */
     function renderizarRecados() {
         if (!guestbookList) return;
-
         if (recadosExibidos.length === 0) {
             guestbookList.innerHTML = `<div class="info-card message-card" style="flex: 0 0 100%;"><p class="personal-message">"Seja o primeiro a deixar um recado! ✨"</p></div>`;
             return;
         }
-
         const recadosHtml = recadosExibidos.map(recado => {
             const nomeLimpo = recado.nome ? recado.nome.replace(/"/g, '') : 'Anônimo';
             const mensagemLimpa = recado.mensagem ? recado.mensagem.replace(/"/g, '') : '...';
@@ -67,57 +56,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
         }).join('');
-        
-        const minRecadosParaRolar = 4;
-        if (recadosExibidos.length < minRecadosParaRolar) {
-            guestbookList.innerHTML = recadosHtml;
-            guestbookList.style.animation = 'none';
-            if (guestbookList.parentElement) guestbookList.parentElement.style.justifyContent = 'center';
-        } else {
-            guestbookList.innerHTML = recadosHtml + recadosHtml;
-            guestbookList.style.animation = 'scroll 60s linear infinite';
-            if (guestbookList.parentElement) guestbookList.parentElement.style.justifyContent = 'flex-start';
-        }
+        guestbookList.innerHTML = recadosHtml + recadosHtml;
+        guestbookList.style.animation = 'scroll 60s linear infinite';
     }
 
-    /**
-     * Carrega os recados da planilha do Google.
-     */
     async function carregarRecados() {
         if (!googleSheetCsvUrl.startsWith('http')) return;
-
         try {
             const cacheBustingUrl = `${googleSheetCsvUrl}&timestamp=${new Date().getTime()}`;
             const response = await fetch(cacheBustingUrl);
             if (!response.ok) throw new Error(`Erro na rede: ${response.status}`);
             const data = await response.text();
-            
             const rows = data.trim().split('\n').slice(1).filter(row => row.trim() !== "");
-            
             recadosExibidos = rows.map(row => {
                 const parts = row.split(',');
                 const nome = parts[1];
                 const mensagem = parts.slice(2).join(',');
                 return { nome, mensagem };
             }).reverse();
-
             renderizarRecados();
-
         } catch (error) {
             console.error('Erro ao carregar recados:', error);
         }
     }
     
-    /**
-     * Preenche o cubo mágico com os nomes dos doadores.
-     */
     function popularCuboMagico() {
         if (!rubiksCube) return;
         rubiksCube.innerHTML = '';
-
         const faces = ['front', 'back', 'left', 'right', 'top', 'bottom'];
-        const colors = ['#FFFFFF', '#ffeb3b', '#ff3d00', '#4caf50', '#2196f3', '#ff9800'];
-
+        const colors = ['var(--purple-light)', 'var(--purple-dark)', 'var(--gold)', '#FFFFFF', '#61dafb', '#ff3d00'];
         let donorIndex = 0;
         faces.forEach(faceName => {
             const faceDiv = document.createElement('div');
@@ -140,9 +107,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    /**
-     * Calcula o total arrecadado, a porcentagem e atualiza a barra de progresso.
-     */
     function atualizarBarraDeProgresso() {
         const totalArrecadado = doadores.reduce((soma, doador) => soma + doador.valor, 0);
         const porcentagem = (totalArrecadado / metaFinanceira) * 100;
@@ -155,9 +119,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if(porcentagemMetaEl) porcentagemMetaEl.textContent = `${porcentagemLimitada.toFixed(0)}%`;
     }
 
-    /**
-     * Atualiza o QR Code, os botões e os textos de instrução.
-     */
     function updatePixInfo(pixCode, amount) {
         if (!pixCode || !qrCodeImage) { console.error("Código PIX ou elemento do QR Code não encontrado!"); qrCodeImage.style.display = 'none'; return; }
         qrCodeImage.style.display = 'block';
@@ -169,6 +130,45 @@ document.addEventListener('DOMContentLoaded', function() {
         } else { qrInstructionText.innerHTML = `${iconHtml} Escaneie o QR Code`; qrInstructionSubtext.innerHTML = `(Valor Livre)`; }
     }
 
+    /**
+     * Adiciona a funcionalidade de arrastar ao carrossel de recados.
+     */
+    function setupDraggableCarousel() {
+        if (!guestbookCarousel || !guestbookList) return;
+
+        let isDragging = false, startX, scrollLeft;
+
+        const startDragging = (e) => {
+            isDragging = true;
+            guestbookList.classList.add('is-dragging');
+            startX = (e.pageX || e.touches[0].pageX) - guestbookCarousel.offsetLeft;
+            scrollLeft = guestbookCarousel.scrollLeft;
+        };
+
+        const stopDragging = () => {
+            isDragging = false;
+            guestbookList.classList.remove('is-dragging');
+        };
+
+        const drag = (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = (e.pageX || e.touches[0].pageX) - guestbookCarousel.offsetLeft;
+            const walk = (x - startX) * 2; // Multiplicador para acelerar a rolagem
+            guestbookCarousel.scrollLeft = scrollLeft - walk;
+        };
+
+        // Eventos de Mouse
+        guestbookCarousel.addEventListener('mousedown', startDragging);
+        guestbookCarousel.addEventListener('mouseleave', stopDragging);
+        guestbookCarousel.addEventListener('mouseup', stopDragging);
+        guestbookCarousel.addEventListener('mousemove', drag);
+
+        // Eventos de Toque
+        guestbookCarousel.addEventListener('touchstart', startDragging);
+        guestbookCarousel.addEventListener('touchend', stopDragging);
+        guestbookCarousel.addEventListener('touchmove', drag);
+    }
 
     // --- 3. CONFIGURAÇÃO DOS EVENTOS ---
     valueOptions.forEach(button => { button.addEventListener('click', () => { valueOptions.forEach(btn => btn.classList.remove('active')); button.classList.add('active'); updatePixInfo(button.dataset.pixCode, button.dataset.amount); }); });
@@ -176,11 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (openModalBtn) openModalBtn.addEventListener('click', () => modal.style.display = 'block');
     if (closeModalBtn) closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
-    window.addEventListener('click', (event) => {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    });
+    window.addEventListener('click', (event) => { if (event.target == modal) { modal.style.display = 'none'; } });
 
     if (guestbookForm) {
         guestbookForm.addEventListener('submit', function(e) {
@@ -189,7 +185,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const nome = formData.get('nome');
             const mensagem = formData.get('mensagem');
             const data = { nome, mensagem };
-
             submitGuestbookBtn.textContent = 'Enviando...';
             submitGuestbookBtn.disabled = true;
 
@@ -204,10 +199,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     showNotification('✅ Recado publicado com sucesso!');
                     modal.style.display = 'none';
                     this.reset();
-                    
                     recadosExibidos.unshift({ nome, mensagem });
                     renderizarRecados();
-                    
                 } else { throw new Error(res.message); }
             })
             .catch(error => {
@@ -228,11 +221,12 @@ document.addEventListener('DOMContentLoaded', function() {
         atualizarBarraDeProgresso();
         popularCuboMagico();
         carregarRecados();
+        setupDraggableCarousel(); // Chama a nova função de arrastar
     }
 
     initializePage();
     initParticles();
-    console.log('🎓 Site completo com todas as funcionalidades carregado!');
+    console.log('🎓 Site completo com carrossel interativo carregado!');
 });
 
 

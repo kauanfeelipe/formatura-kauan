@@ -171,7 +171,13 @@ body {
 /* ------------------- */
 .supporters-section { padding: 2rem 0; text-align: center; }
 .cube-container { width: 200px; height: 200px; perspective: 1200px; margin: 0 auto; }
-.rubiks-cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: rotate-cube 15s infinite linear; }
+.rubiks-cube {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: rotate-cube 10s infinite linear; /* AJUSTE AQUI: Acelerado de 15s para 10s */
+}
 .rubiks-cube .face { position: absolute; display: flex; flex-wrap: wrap; width: 100%; height: 100%; }
 .rubiks-cube .face.front  { transform: translateZ(100px); }
 .rubiks-cube .face.back   { transform: rotateY(180deg) translateZ(100px); }
@@ -182,13 +188,33 @@ body {
 .rubiks-cube .cube { width: calc(100% / 3); height: calc(100% / 3); box-sizing: border-box; border: 2px solid var(--bg-dark); display: flex; justify-content: center; align-items: center; text-align: center; padding: 4px; }
 .rubiks-cube .cube-name { color: var(--bg-dark); font-weight: 600; font-size: 11px; line-height: 1.1; word-break: break-word; text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3); }
 
+
 /* ------------------- */
 /* Seção Mural de Recados */
 /* ------------------- */
 .guestbook-section { padding: 2rem 0; text-align: center; }
 .section-subtitle { font-size: 1.1rem; color: var(--text-medium); margin-top: -2rem; margin-bottom: 1.5rem; }
-.guestbook-carousel { margin-top: 2.5rem; max-width: 100%; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
-.guestbook-list { display: flex; width: fit-content; animation: scroll 60s linear infinite; }
+.guestbook-carousel { 
+    margin-top: 2.5rem; 
+    max-width: 100%; 
+    overflow: hidden; 
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); 
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    cursor: grab; /* Indica que a área é arrastável */
+}
+
+.guestbook-list { 
+    display: flex; 
+    animation: scroll 60s linear infinite; 
+    will-change: transform; 
+}
+
+/* NOVA CLASSE: Pausa a animação quando o usuário está arrastando */
+.guestbook-list.is-dragging {
+    animation-play-state: paused;
+    cursor: grabbing;
+}
+
 .guestbook-list .message-card { margin: 0 1rem; flex: 0 0 350px; }
 
 /* ------------------- */
@@ -239,4 +265,5 @@ body {
     .supporters-section { padding-top: 1.5rem; }
     .values-container { grid-template-columns: repeat(2, 1fr); }
     .value-option { min-height: auto; padding: 0.75rem 0.5rem; }
+    .guestbook-list .message-card { flex: 0 0 280px; }
 }
