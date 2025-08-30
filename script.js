@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         { nome: 'Adrian Souza', valor: 5 },
         { nome: 'Wilian Machado', valor: 5 },
         { nome: 'Fernanda Bonato', valor: 10 },
+        { nome: 'Cícero Nunes', valor: 50 },
     ];
     const googleSheetCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTko3TfuHCK_RV1R5Lb46In2hDyg6v09zUlg1Jv6a7-shWj4Ggno95vGMgo7CPyxfKdF8Fc6nPJ7yqG/pub?gid=0&single=true&output=csv';
 
