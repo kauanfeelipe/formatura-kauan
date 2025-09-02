@@ -53,7 +53,7 @@
                         <span class="btn-icon">📋</span>
                         Copiar Chave PIX
                     </button>
-                    <a href="" target="_blank" class="action-btn" id="openQrLink">
+                    <a href="" target="_blank" rel="noopener noreferrer" class="action-btn" id="openQrLink">
                         <span class="btn-icon">🔗</span>
                         Abrir QR Code
                     </a>
@@ -131,11 +131,19 @@
                 <div class="rubiks-cube" id="rubiks-cube">
                     </div>
             </div>
+            <div class="top-donor" id="top-donor" aria-live="polite">
+                <div class="top-donor-icon">🏆</div>
+                <div class="top-donor-info">
+                    <div class="top-donor-label">Maior doador</div>
+                    <div class="top-donor-name" id="top-donor-name">Em breve...</div>
+                </div>
+                <div class="top-donor-amount" id="top-donor-amount"></div>
+            </div>
         </section>
 
         <section class="guestbook-section">
             <h2 class="section-title">Mural de Recados</h2>
-            <p class="section-subtitle">( deixe um recado, mensagem de apoio, incentivo. Críticas também são bem-vindas! )</p>
+            <p class="section-subtitle">(deixe um recado, mensagem de apoio, incentivo. Críticas também são bem-vindas!)</p>
             <button class="cta-button" id="openModalBtn">Publicar um Recado 💌</button>
             
             <div class="guestbook-carousel">

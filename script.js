@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const metaTotalEl = document.getElementById('metaTotal');
     const porcentagemMetaEl = document.getElementById('porcentagemMeta');
     const rubiksCube = document.getElementById('rubiks-cube');
+    const topDonorEl = document.getElementById('top-donor');
+    const topDonorNameEl = document.getElementById('top-donor-name');
+    const topDonorAmountEl = document.getElementById('top-donor-amount');
     const guestbookList = document.getElementById('guestbook-list');
     const guestbookCarousel = document.querySelector('.guestbook-carousel');
     const modal = document.getElementById('guestbook-modal');
@@ -38,26 +41,46 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- 2. FUNÇÕES DE LÓGICA E ATUALIZAÇÃO ---
     function renderizarRecados() {
         if (!guestbookList) return;
-        if (recadosExibidos.length === 0) {
-            guestbookList.innerHTML = `<div class="info-card message-card" style="flex: 0 0 100%;"><p class="personal-message">"Seja o primeiro a deixar um recado! ✨"</p></div>`;
-            return;
-        }
-        const recadosHtml = recadosExibidos.map(recado => {
-            const nomeLimpo = recado.nome ? recado.nome.replace(/"/g, '') : 'Anônimo';
-            const mensagemLimpa = recado.mensagem ? recado.mensagem.replace(/"/g, '') : '...';
-            return `
-                <div class="info-card message-card">
-                    <p class="personal-message">"${mensagemLimpa}"</p>
-                    <div class="message-author">
-                        <div class="author-avatar">💬</div>
-                        <div class="author-info">
-                            <div class="author-name">${nomeLimpo}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        guestbookList.innerHTML = recadosHtml + recadosHtml;
+        guestbookList.innerHTML = '';
+        const listaParaDuplicar = recadosExibidos.length === 0 ? [{ nome: 'Anônimo', mensagem: 'Seja o primeiro a deixar um recado! ✨' }] : recadosExibidos;
+
+        const renderMensagem = (recado) => {
+            const card = document.createElement('div');
+            card.className = 'info-card message-card';
+
+            const p = document.createElement('p');
+            p.className = 'personal-message';
+            p.textContent = `"${recado.mensagem || '...'}"`;
+
+            const author = document.createElement('div');
+            author.className = 'message-author';
+
+            const avatar = document.createElement('div');
+            avatar.className = 'author-avatar';
+            avatar.textContent = '💬';
+
+            const info = document.createElement('div');
+            info.className = 'author-info';
+
+            const name = document.createElement('div');
+            name.className = 'author-name';
+            name.textContent = recado.nome || 'Anônimo';
+
+            info.appendChild(name);
+            author.appendChild(avatar);
+            author.appendChild(info);
+            card.appendChild(p);
+            card.appendChild(author);
+            return card;
+        };
+
+        // Renderiza duas vezes para efeito de loop contínuo
+        [listaParaDuplicar, listaParaDuplicar].forEach(lista => {
+            lista.forEach(recado => {
+                guestbookList.appendChild(renderMensagem(recado));
+            });
+        });
+
         guestbookList.style.animation = 'scroll 60s linear infinite';
     }
 
@@ -114,14 +137,31 @@ document.addEventListener('DOMContentLoaded', function() {
         const porcentagemLimitada = Math.min(porcentagem, 100);
         const totalFormatado = totalArrecadado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         const metaFormatada = metaFinanceira.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        if(progressBarFill) progressBarFill.style.width = `${porcentagemLimitada}%`;
+        if(progressBarFill) {
+            progressBarFill.style.width = `${porcentagemLimitada}%`;
+            progressBarFill.setAttribute('role', 'progressbar');
+            progressBarFill.setAttribute('aria-valuemin', '0');
+            progressBarFill.setAttribute('aria-valuemax', '100');
+            progressBarFill.setAttribute('aria-valuenow', porcentagemLimitada.toFixed(0));
+        }
         if(valorArrecadadoEl) valorArrecadadoEl.textContent = totalFormatado;
         if(metaTotalEl) metaTotalEl.textContent = metaFormatada;
         if(porcentagemMetaEl) porcentagemMetaEl.textContent = `${porcentagemLimitada.toFixed(0)}%`;
     }
 
+    function renderTopDonor() {
+        if (!topDonorEl || !Array.isArray(doadores) || doadores.length === 0) return;
+        const maior = doadores.reduce((acc, d) => (d.valor > (acc?.valor || 0) ? d : acc), null);
+        if (!maior) return;
+        const nome = maior.nome || '—';
+        const valor = (maior.valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        if (topDonorNameEl) topDonorNameEl.textContent = nome;
+        if (topDonorAmountEl) topDonorAmountEl.textContent = valor;
+    }
+
     function updatePixInfo(pixCode, amount) {
-        if (!pixCode || !qrCodeImage) { console.error("Código PIX ou elemento do QR Code não encontrado!"); qrCodeImage.style.display = 'none'; return; }
+        if (!pixCode) { console.error("Código PIX não informado!"); return; }
+        if (!qrCodeImage) { console.error("Elemento do QR Code não encontrado!"); return; }
         qrCodeImage.style.display = 'block';
         const qrApiUrl = `https://quickchart.io/qr?text=${encodeURIComponent(pixCode)}`;
         const qrApiUrlLarge = `https://quickchart.io/qr?size=400&text=${encodeURIComponent(pixCode)}`;
@@ -172,7 +212,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- 3. CONFIGURAÇÃO DOS EVENTOS ---
-    valueOptions.forEach(button => { button.addEventListener('click', () => { valueOptions.forEach(btn => btn.classList.remove('active')); button.classList.add('active'); updatePixInfo(button.dataset.pixCode, button.dataset.amount); }); });
+    valueOptions.forEach(button => {
+        // Clique com mouse
+        button.addEventListener('click', () => {
+            valueOptions.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            updatePixInfo(button.dataset.pixCode, button.dataset.amount);
+        });
+        // Acessibilidade por teclado
+        button.setAttribute('role', 'button');
+        button.setAttribute('tabindex', '0');
+        button.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                button.click();
+            }
+        });
+    });
     copyPixBtn.addEventListener('click', () => { const pixKey = copyPixBtn.getAttribute('data-pix-key'); if (!pixKey || pixKey.includes('COLE_AQUI')) { showNotification('❌ Por favor, selecione um valor primeiro.'); return; } navigator.clipboard.writeText(pixKey).then(() => showNotification('✅ Chave PIX copiada com sucesso!')).catch(() => showNotification('❌ Erro ao copiar a chave.')); });
     
     if (openModalBtn) openModalBtn.addEventListener('click', () => modal.style.display = 'block');
@@ -221,6 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (activeButton) { activeButton.click(); }
         atualizarBarraDeProgresso();
         popularCuboMagico();
+        renderTopDonor();
         carregarRecados();
         setupDraggableCarousel(); // Chama a nova função de arrastar
     }
@@ -250,12 +307,23 @@ function initParticles() {
 }
 
 function showNotification(message) {
+    let live = document.getElementById('aria-live-region');
+    if (!live) {
+        live = document.createElement('div');
+        live.id = 'aria-live-region';
+        live.setAttribute('aria-live', 'polite');
+        live.setAttribute('aria-atomic', 'true');
+        live.style.position = 'fixed';
+        live.style.left = '-9999px';
+        document.body.appendChild(live);
+    }
     const oldNotification = document.querySelector('.notification');
     if (oldNotification) { oldNotification.remove(); }
     const notification = document.createElement('div');
     notification.className = 'notification';
     notification.textContent = message;
     document.body.appendChild(notification);
+    live.textContent = message;
     setTimeout(() => { notification.classList.add('show'); }, 100);
     setTimeout(() => {
         notification.classList.remove('show');

@@ -11,6 +11,8 @@
     --text-light: #F3F4F6;
     --text-medium: #9CA3AF;
     --primary-gradient: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple-light) 100%);
+    --white: #ffffff;
+    --dark-gradient: none;
     
     /* Fontes */
     --font-primary: 'Inter', sans-serif;
@@ -188,6 +190,14 @@ body {
 .rubiks-cube .cube { width: calc(100% / 3); height: calc(100% / 3); box-sizing: border-box; border: 2px solid var(--bg-dark); display: flex; justify-content: center; align-items: center; text-align: center; padding: 4px; }
 .rubiks-cube .cube-name { color: var(--bg-dark); font-weight: 600; font-size: 11px; line-height: 1.1; word-break: break-word; text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3); }
 
+/* Maior Doador */
+.top-donor { display: inline-flex; align-items: center; gap: 0.75rem; margin-top: 5rem; background: var(--bg-card); border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 999px; padding: 0.5rem 0.9rem; box-shadow: var(--shadow); backdrop-filter: blur(10px); }
+.top-donor-icon { font-size: 1.2rem; filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.5)); }
+.top-donor-info { display: flex; flex-direction: column; align-items: flex-start; }
+.top-donor-label { font-size: 0.75rem; color: var(--text-medium); line-height: 1; }
+.top-donor-name { font-weight: 700; color: var(--text-light); line-height: 1; }
+.top-donor-amount { margin-left: 0.5rem; font-weight: 700; color: var(--text-light); background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 999px; padding: 0.25rem 0.6rem; }
+
 
 /* ------------------- */
 /* Seção Mural de Recados */
@@ -267,3 +277,5 @@ body {
     .value-option { min-height: auto; padding: 0.75rem 0.5rem; }
     .guestbook-list .message-card { flex: 0 0 280px; }
 }
+
+/* Prefers-reduced-motion desativado a pedido: manter todas animações ativas */
